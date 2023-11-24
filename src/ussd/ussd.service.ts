@@ -57,17 +57,30 @@ export class UssdService {
 
 			case UssdStep.ENTER_AGE_VALUE_STEP:
 				const age = +request.text;
-				if (typeof age !== "number") {
+				if (isNaN(age)) {
 					response.response = "Please enter a valid age.\nIt should be a positive integer.";
+					break;
 				}
-				else if (age < 18) {
+				if (age < 18) {
 					response.response = "You are not allowed to use this service.";
 				}
 				else if (age > 60) {
 					response.response = "You are too old to use this service.";
 				}
 				else {
-					response.response = `You are ${request.text}. Those are the best years of your life. Enjoy them.`;
+					const randomSentences = [
+						"Youth is the gift of nature, but age is a work of art.",
+						"The young have aspirations that never come to pass, the old have reminiscences of what never happened.",
+						"Youth is not a time of life; it is a state of mind.",
+						"The secret of staying young is to live honestly, eat slowly, and lie about your age.",
+						"Age is an issue of mind over matter. If you don't mind, it doesn't matter.",
+						"Youth is the joy, the little bird that has broken out of the eggs and is eagerly waiting to spread out its wings in the open sky of freedom and hope.",
+						"Youth is the best time to be rich, and the best time to be poor.",
+						"Age is no barrier. It's a limitation you put on your mind.",
+						`You are ${request.text}. Those are the best years of your life. Enjoy them.`
+					];
+
+					response.response = randomSentences[Math.floor(Math.random() * randomSentences.length)];
 				}
 				response.action = "END";
 				this.redisService.del(request.sessionId);
