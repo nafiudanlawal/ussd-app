@@ -9,14 +9,9 @@ export class RedisService {
 		this.initialClient();
 	}
 	async initialClient() {
-		this.client = await createClient();
-		this.client.on('error', function (error) {
-			console.error(error);
-		});
-
-		this.client.on('connect', function () {
-			console.log('Connected to redis successfully');
-		});
+		this.client = await createClient()
+			.on('error', err => console.log('Redis Client Error', err))
+			.connect();
 	}
 
 	async set(key: string, value: string): Promise<string> {
@@ -30,7 +25,9 @@ export class RedisService {
 
 	async get(key: string): Promise<string | null> {
 		try {
-			return await this.client.get(key);
+			const result = await this.client.get(key);
+			console.log({result});
+			return result;
 		} catch (error) {
 			console.error("Failed to get value from Redis:", error);
 			throw error;

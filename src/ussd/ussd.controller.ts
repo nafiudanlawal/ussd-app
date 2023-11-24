@@ -1,5 +1,6 @@
-import { Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { UssdService } from './ussd.service';
+import { UssdRequestDto } from 'src/dtos/UssdRequest.dto';
 
 @Controller('ussd')
 export class UssdController {
@@ -8,7 +9,8 @@ export class UssdController {
 	) {}
 
 	@Post("/requests")
-	async request(@Req() request) {
-		return this.ussdService.getResponse(request);
+	async request(@Body() requestBody: UssdRequestDto) {
+		console.log(requestBody)
+		return this.ussdService.getResponse(requestBody);
 	}
 }
